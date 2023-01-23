@@ -3,23 +3,22 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
 
-const AppRouter = (isLoggedIn) => {
+const AppRouter = ({isLoggedIn}) => {
+    console.log(isLoggedIn);
     return (
         <Router>
             <Switch>
-                {isLoggedIn ? 
-                    (<>
+                {isLoggedIn ? (
+                    <>
                         <Route exact path="/">
-                            <Home></Home>
-                        </Route> 
-                    </>)
-                    :
-                    (<>
-                        <Route exact path="/">
-                            <Auth></Auth>
+                            <Home/>
                         </Route>
-                    </> )
-                }
+                    </>
+                ):(
+                    <Route exact path="/">
+                        <Auth/>
+                    </Route>
+                )}
             </Switch>
         </Router>
     );
