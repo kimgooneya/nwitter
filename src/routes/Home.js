@@ -48,9 +48,8 @@ const Home = () => {
                         <div key={nweet.id}>
                             <h4>{nweet.nweet}</h4>
                         </div>
-                    )
-                }
-                )}
+                    );
+                })}
             </div>
         </div>
     );
