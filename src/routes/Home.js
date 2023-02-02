@@ -8,6 +8,7 @@ import {
     orderBy,
     onSnapshot
 } from "firebase/firestore";
+import Nweet from "components/Nweet";
 
 const Home = ({userObj}) => {
     const [nweet, setNweet] = useState ("");
@@ -49,9 +50,7 @@ const Home = ({userObj}) => {
             <div>
                 {nweets.map(nweet => {
                     return(
-                        <div key={nweet.id}>
-                            <h4>{nweet.text}</h4>
-                        </div>
+                    <Nweet key={nweet.id} nweetObj={nweet} isOwner={nweet.creatorId==userObj.uid}/>
                     );
                 })}
             </div>
