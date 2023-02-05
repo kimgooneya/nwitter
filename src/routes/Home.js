@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
+import {v4 as uuidv4} from "uuid";
 import {
-    addDoc,
     collection, 
-    getDocs, 
     query, 
     orderBy,
     onSnapshot
@@ -27,16 +26,19 @@ const Home = ({userObj}) => {
     },[])
     const onSubmit= async (event) => {
         event.preventDefault();
-        try {
-            const docRef = await addDoc(collection(dbService,"nweets"),{
-                text:nweet,
-                createdAt:Date.now(),
-                creatorId:userObj.uid,
-            });
-        } catch (error) {
-            console.log("Error adding documents:",error);
-        }
-        setNweet("");
+        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+        const response = await fileRef.putString(attachment, "data_url");
+        console.log(response);
+        // try {
+        //     const docRef = await addDoc(collection(dbService,"nweets"),{
+        //         text:nweet,
+        //         createdAt:Date.now(),
+        //         creatorId:userObj.uid,
+        //     });
+        // } catch (error) {
+        //     console.log("Error adding documents:",error);
+        // }
+        // setNweet("");
     };
     const onChange = (event) =>{
         const {target:{value}}=event;
