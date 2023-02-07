@@ -15,23 +15,22 @@ const Home = ({userObj}) => {
     const [nweets, setNweets] = useState([]);
     const [attachment, setAttachment]=useState();
     useEffect(()=>{
-        const q = query(collection(dbService, "nweets"), orderBy("createdAt","desc"));
+        const q = query(collection(dbService, "nweet"), orderBy("createdAt","desc"));
         onSnapshot(q, (snapshot)=>{
             const nweetArr=snapshot.docs.map((doc)=>({
                 id:doc.id,
                 ...doc.data(),
             }));
             setNweets(nweetArr);
-            console.log(nweets);
         })
-    },[])
+    },[]);
     const onSubmit= async (event) => {
         event.preventDefault();
         let attachmentUrl = "";
         if(attachment!=""){
-            attachmentUrl = await response.ref.getDownloadURL();
             const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
             const response = await attachmentRef.putString(attachment, "data_url");
+            attachmentUrl = await response.ref.getDownloadURL();
         }
         const nweetObj = {
             text:nweet,
