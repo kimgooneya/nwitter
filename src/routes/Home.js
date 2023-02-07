@@ -5,7 +5,8 @@ import {
     collection, 
     query, 
     orderBy,
-    onSnapshot
+    onSnapshot,
+    addDoc
 } from "firebase/firestore";
 import Nweet from "components/Nweet";
 
@@ -15,30 +16,32 @@ const Home = ({userObj}) => {
     const [attachment, setAttachment]=useState();
     useEffect(()=>{
         const q = query(collection(dbService, "nweets"), orderBy("createdAt","desc"));
-
         onSnapshot(q, (snapshot)=>{
             const nweetArr=snapshot.docs.map((doc)=>({
                 id:doc.id,
                 ...doc.data(),
             }));
             setNweets(nweetArr);
+            console.log(nweets);
         })
     },[])
     const onSubmit= async (event) => {
         event.preventDefault();
-        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-        const response = await fileRef.putString(attachment, "data_url");
-        console.log(response);
-        // try {
-        //     const docRef = await addDoc(collection(dbService,"nweets"),{
-        //         text:nweet,
-        //         createdAt:Date.now(),
-        //         creatorId:userObj.uid,
-        //     });
-        // } catch (error) {
-        //     console.log("Error adding documents:",error);
-        // }
-        // setNweet("");
+        let attachmentUrl = "";
+        if(attachment!=""){
+            attachmentUrl = await response.ref.getDownloadURL();
+            const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+            const response = await attachmentRef.putString(attachment, "data_url");
+        }
+        const nweetObj = {
+            text:nweet,
+            createdAt:Date.now(),
+            creatorId:userObj.uid,
+            attachmentUrl
+        }
+        await addDoc(collection(dbService,"nweet"), nweetObj);
+        setNweet("");
+        setAttachment("");
     };
     const onChange = (event) =>{
         const {target:{value}}=event;
