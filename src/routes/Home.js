@@ -13,7 +13,7 @@ import Nweet from "components/Nweet";
 const Home = ({userObj}) => {
     const [nweet, setNweet] = useState ("");
     const [nweets, setNweets] = useState([]);
-    const [attachment, setAttachment]=useState();
+    const [attachment, setAttachment]=useState("");
     useEffect(()=>{
         const q = query(collection(dbService, "nweet"), orderBy("createdAt","desc"));
         onSnapshot(q, (snapshot)=>{
@@ -23,11 +23,12 @@ const Home = ({userObj}) => {
             }));
             setNweets(nweetArr);
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
     const onSubmit= async (event) => {
         event.preventDefault();
         let attachmentUrl = "";
-        if(attachment!=""){
+        if(attachment!==""){
             const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
             const response = await attachmentRef.putString(attachment, "data_url");
             attachmentUrl = await response.ref.getDownloadURL();
@@ -70,7 +71,7 @@ const Home = ({userObj}) => {
                 <input type="submit" value="Nweet"/>
                 {attachment && 
                 <div>
-                    <img src={attachment} width="50px" height="50px"/>
+                    <img src={attachment} width="50px" height="50px" alt="nweet img"/>
                     <button onClick={onClearAttachment}>Clear</button>
                 </div>
                 }
@@ -78,7 +79,7 @@ const Home = ({userObj}) => {
             <div>
                 {nweets.map(nweet => {
                     return(
-                    <Nweet key={nweet.id} nweetObj={nweet} isOwner={nweet.creatorId==userObj.uid}/>
+                    <Nweet key={nweet.id} nweetObj={nweet} isOwner={nweet.creatorId===userObj.uid}/>
                     );
                 })}
             </div>
