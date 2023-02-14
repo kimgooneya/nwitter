@@ -5,7 +5,6 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
 const Profile = ({userObj}) => {
-    console.log(userObj);
     const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
     const history = useHistory();
     const onLogOutClick = () => {
@@ -17,12 +16,7 @@ const Profile = ({userObj}) => {
         where("creatorId", "==", userObj.uid),
         orderBy("createdAt", "asc"));
         
-        
         const querySnapshot = await getDocs(q);
-
-        querySnapshot.forEach(doc => {
-           console.log(doc.id,"=>",doc.data());
-        })
     };
     useEffect(()=>{
         getMyNweet();
